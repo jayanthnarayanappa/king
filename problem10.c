@@ -1,95 +1,85 @@
-#include <stdio.h> 
-#include <stdlib.h> 
-  
-/* A binary tree node has data, pointer to left child 
-   and a pointer to right child */
-struct node 
-{ 
-     int data; 
-     struct node* left; 
-     struct node* right; 
-}; 
-  
-/* Helper function that allocates a new node with the 
-   given data and NULL left and right pointers. */
-struct node* newNode(int data) 
-{ 
-     struct node* node = (struct node*) 
-                                  malloc(sizeof(struct node)); 
-     node->data = data; 
-     node->left = NULL; 
-     node->right = NULL; 
-  
-     return(node); 
-} 
-  
-/* Given a binary tree, print its nodes according to the 
-  "bottom-up" postorder traversal. */
-void printPostorder(struct node* node) 
-{ 
-     if (node == NULL) 
-        return; 
-  
-     // first recur on left subtree 
-     printPostorder(node->left); 
-  
-     // then recur on right subtree 
-     printPostorder(node->right); 
-  
-     // now deal with the node 
-     printf("%d ", node->data); 
-} 
-  
-/* Given a binary tree, print its nodes in inorder*/
-void printInorder(struct node* node) 
-{ 
-     if (node == NULL) 
-          return; 
-  
-     /* first recur on left child */
-     printInorder(node->left); 
-  
-     /* then print the data of node */
-     printf("%d ", node->data);   
-  
-     /* now recur on right child */
-     printInorder(node->right); 
-} 
-  
-/* Given a binary tree, print its nodes in preorder*/
-void printPreorder(struct node* node) 
-{ 
-     if (node == NULL) 
-          return; 
-  
-     /* first print data of node */
-     printf("%d ", node->data);   
-  
-     /* then recur on left sutree */
-     printPreorder(node->left);   
-  
-     /* now recur on right subtree */
-     printPreorder(node->right); 
-}     
-  
+#include<stdio.h>
+#include<conio.h>
+#include<stdlib.h>
+typedef struct node
+{
+  int data;
+  struct node *left;
+  struct node *right;
+} node;
 
-int main() 
-{ 
-     struct node *root  = newNode(1); 
-     root->left             = newNode(2); 
-     root->right           = newNode(3); 
-     root->left->left     = newNode(4); 
-     root->left->right   = newNode(5);  
-  
-     printf("\nPreorder traversal of binary tree is \n"); 
-     printPreorder(root); 
-  
-     printf("\nInorder traversal of binary tree is \n"); 
-     printInorder(root);   
-  
-     printf("\nPostorder traversal of binary tree is \n"); 
-     printPostorder(root); 
-  
-     getchar(); 
-     return 0; 
-} 
+node *create()
+{
+    node *p;
+    int x;
+    printf("Enter data(-1 for no node):");
+    scanf("%d",&x);
+
+    if(x==-1)
+	return NULL;
+
+    p=(node*)malloc(sizeof(node));
+    p->data=x;
+    printf("Enter left child of %d:\n",x);
+    p->left=create();
+    printf("Enter right child of %d:\n",x);
+    p->right=create();
+    return p;
+}
+
+void preorder(node *t)
+{
+  if(t!=NULL)
+  {
+    printf("  %d",t->data);
+    preorder(t->left);
+    preorder(t->right);
+  }
+}
+void inorder(node *t)
+{
+  if(t!=NULL)
+  {
+    inorder(t->left);
+    printf("  %d",t->data);
+    inorder(t->right);
+  }
+}
+void postorder(node *t)
+{
+  if(t!=NULL)
+  {
+    postorder(t->left);
+    postorder(t->right);
+    printf("  %d",t->data);
+  }
+}
+
+
+void print_tree(node *r,int l)
+{
+	int i;
+	if(!r) return ;
+	print_tree(r->right,l+1);
+	for(i=0;i<l;++i)
+		printf(" ");
+	printf("%d \n",r->data);
+	print_tree(r->left,l+1);
+
+
+}
+int main()
+{
+  node *root;
+  root=create();
+  printf("\nThe preorder traversal of tree is: ");
+  preorder(root);
+  printf("\nThe inorder traversal of tree is: ");
+  inorder(root);
+  printf("\nThe postorder traversal of tree is:");
+  postorder(root);
+  printf("\nTree is :\n\n");
+  print_tree(root,0);
+  getch();
+return 0;
+}
